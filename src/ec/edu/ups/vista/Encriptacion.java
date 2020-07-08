@@ -5,17 +5,27 @@
  */
 package ec.edu.ups.vista;
 
+import ec.edu.ups.controlador.ControladorEncriptado;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  *
  * @author Dutan2000
  */
 public class Encriptacion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Encriptacion
-     */
+    private String ruta;
+    private String texto;
+    private ControladorEncriptado controladorEncriptado;
+
     public Encriptacion() {
         initComponents();
+        this.ruta = "";
+        this.texto = "";
+        this.controladorEncriptado = new ControladorEncriptado();
     }
 
     /**
@@ -28,44 +38,63 @@ public class Encriptacion extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        areaDeTexto = new javax.swing.JTextArea();
+        txtaTexto = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        botonEncriptar = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
+        mnNuevo = new javax.swing.JMenuItem();
+        mnGuardar = new javax.swing.JMenuItem();
+        mnCerrar = new javax.swing.JMenuItem();
+        mnSalir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        areaDeTexto.setColumns(20);
-        areaDeTexto.setRows(5);
-        jScrollPane1.setViewportView(areaDeTexto);
+        txtaTexto.setColumns(20);
+        txtaTexto.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        txtaTexto.setRows(5);
+        jScrollPane1.setViewportView(txtaTexto);
 
-        jLabel1.setText("INGRESE EL TEXTO QUE DESEA ECNRIPTAR:");
-
-        botonEncriptar.setText("ENCRIPTAR");
-        botonEncriptar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonEncriptarActionPerformed(evt);
-            }
-        });
+        jLabel1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        jLabel1.setText("INGRESE EL TEXTO QUE DESEA ECNRIPTAR");
 
         fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        fileMenu.setText("Archivo");
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
-
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        mnNuevo.setMnemonic('o');
+        mnNuevo.setText("Nuevo");
+        mnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
+                mnNuevoActionPerformed(evt);
             }
         });
-        fileMenu.add(exitMenuItem);
+        fileMenu.add(mnNuevo);
+
+        mnGuardar.setMnemonic('x');
+        mnGuardar.setText("Guardar");
+        mnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnGuardarActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mnGuardar);
+
+        mnCerrar.setMnemonic('o');
+        mnCerrar.setText("Cerrar");
+        mnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnCerrarActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mnCerrar);
+
+        mnSalir.setMnemonic('o');
+        mnSalir.setText("Salir");
+        mnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnSalirActionPerformed(evt);
+            }
+        });
+        fileMenu.add(mnSalir);
 
         menuBar.add(fileMenu);
 
@@ -76,40 +105,59 @@ public class Encriptacion extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botonEncriptar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(152, 152, 152)
-                        .addComponent(botonEncriptar)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
+    private void mnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnGuardarActionPerformed
+        
+        texto = controladorEncriptado.encriptar(txtaTexto.getText());
+        
+        try {
+            String ruta = "D:\\PROYECTO JAVA\\archivoTexto.txt";
+            FileWriter archivoEscritura = new FileWriter(ruta, true);
 
-    private void botonEncriptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncriptarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonEncriptarActionPerformed
+            BufferedWriter escritura = new BufferedWriter(archivoEscritura);
+            escritura.append(texto);
+            escritura.close();
+            archivoEscritura.close();
+        } catch (FileNotFoundException e1) {
+            System.out.println("Ruta de archivo no encontrada");
+        } catch (IOException e2) {
+            System.out.println("Eror de escritura");
+        } catch (Exception e3) {
+            System.out.println("Error General");
+        }
+    }//GEN-LAST:event_mnGuardarActionPerformed
+
+    private void mnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCerrarActionPerformed
+        txtaTexto.setEditable(false);
+        txtaTexto.setText("");
+    }//GEN-LAST:event_mnCerrarActionPerformed
+
+    private void mnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnNuevoActionPerformed
+        txtaTexto.setEditable(true);
+        txtaTexto.setText("");
+    }//GEN-LAST:event_mnNuevoActionPerformed
+
+    private void mnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSalirActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_mnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,14 +195,15 @@ public class Encriptacion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea areaDeTexto;
-    private javax.swing.JButton botonEncriptar;
-    private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem mnCerrar;
+    private javax.swing.JMenuItem mnGuardar;
+    private javax.swing.JMenuItem mnNuevo;
+    private javax.swing.JMenuItem mnSalir;
+    private javax.swing.JTextArea txtaTexto;
     // End of variables declaration//GEN-END:variables
 
 }
