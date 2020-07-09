@@ -7,9 +7,12 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ControladorEncriptado;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -125,13 +128,17 @@ public class Encriptacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnGuardarActionPerformed
-        
-        texto = controladorEncriptado.encriptar(txtaTexto.getText());
-        
-        try {
-            String ruta = "D:\\PROYECTO JAVA\\archivoTexto.txt";
-            FileWriter archivoEscritura = new FileWriter(ruta, true);
 
+        texto = controladorEncriptado.encriptar(txtaTexto.getText());
+        JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("BUSCAR DOCUMENTO");
+        fc.setCurrentDirectory(new File("D:\\"));
+        fc.setFileFilter(new FileNameExtensionFilter("Notas.txt", "txt"));
+        if (fc.showSaveDialog(this) == 0) {
+            ruta= fc.getSelectedFile().toString()+".txt";
+        }
+        try {
+            FileWriter archivoEscritura = new FileWriter(ruta, true);
             BufferedWriter escritura = new BufferedWriter(archivoEscritura);
             escritura.append(texto);
             escritura.close();
