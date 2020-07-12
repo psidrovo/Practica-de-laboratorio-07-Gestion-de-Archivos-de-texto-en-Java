@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ControladorEncriptado;
@@ -11,12 +6,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * VISTA ENCRIPTADO. Esta vista se encarga de manejar todo sobre el encriptado
+ * de un documento tendremos un menu para nuevo, guardar, cerrar y salir.
+ * 
+ * ruta String -> Se le pasara la ruta donde se desea guardar
+ * texto String -> Se le pasara el texto del textArea
+ * controladorEncriptado ControladorEncriptado -> Se almacenara el objeto que 
+ * controla el Encriptado.
  *
- * @author Dutan2000
+ * @author Paul Idrovo, Dennis Dutan
  */
 public class Encriptacion extends javax.swing.JFrame {
 
@@ -24,11 +29,18 @@ public class Encriptacion extends javax.swing.JFrame {
     private String texto;
     private ControladorEncriptado controladorEncriptado;
 
+    /**
+     * CONSTRUCTOR. Se inicializa los componentes graficos y las variables
+     * globales
+     */
     public Encriptacion() {
         initComponents();
         this.ruta = "";
         this.texto = "";
         this.controladorEncriptado = new ControladorEncriptado();
+        this.setLocationRelativeTo(this);
+        this.setResizable(false);
+        this.setIconImage(new ImageIcon(getClass().getResource("/ec/edu/ups/multimedia/carpeta.png")).getImage());
     }
 
     /**
@@ -51,6 +63,7 @@ public class Encriptacion extends javax.swing.JFrame {
         mnSalir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ENCRIPTADO DE DOCUMENTOS");
 
         txtaTexto.setColumns(20);
         txtaTexto.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -127,6 +140,29 @@ public class Encriptacion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * OPCION MENU GUARDAR. Mediante el evento de action performed se ejecuta el
+     * JFileChooser el mismo que nos ayudara a buscar la ruta de donde deseamos
+     * guardar. Este se puede personalizar segun nuestras necesidades, en este
+     * caso fc.setDialogTitle("") se le pasa un titulo dependiendo la necesidad
+     * del programador, en este caso es BUSCAR DOCUMENTO.
+     * fc.setCurrentDirectory(File) se le pasa ob objeto tipo file que debe
+     * tener la ruta donde deseamos que se abra como predeterminado, en caso de
+     * no encontrarla se ira a la ruta predeterminada del sistema de Documentos.
+     * fc.setFileFilter(FileNameExtensionFilter) se le pasa el tipo de archivos
+     * que el usuario debe elegir, el primer atributo es el nombre que queremos
+     * para visualizar y el segundo la extencion del archivo. Y abrimos la 
+     * ventana de guardar mediante fc.showSaveDialog;
+     *
+     * Luego de tener la ruta mediante FileWriter creamos el documento y le
+     * guardamos el texto encriptado por el metodo encriptar del controlador
+     * Encriptado.
+     *
+     * @see FileWriter
+     * @see JFileChooser
+     * @see ControladorEncriptado
+     * @param evt
+     */
     private void mnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnGuardarActionPerformed
 
         texto = controladorEncriptado.encriptar(txtaTexto.getText());
@@ -135,7 +171,7 @@ public class Encriptacion extends javax.swing.JFrame {
         fc.setCurrentDirectory(new File("D:\\"));
         fc.setFileFilter(new FileNameExtensionFilter("Notas.txt", "txt"));
         if (fc.showSaveDialog(this) == 0) {
-            ruta= fc.getSelectedFile().toString()+".txt";
+            ruta = fc.getSelectedFile().toString() + ".txt";
         }
         try {
             FileWriter archivoEscritura = new FileWriter(ruta, true);
@@ -152,16 +188,33 @@ public class Encriptacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnGuardarActionPerformed
 
+    /**
+     * OPCION MENU CERRAR. Esta opcion del menu nos ayuda para cerrar el
+     * documento si lo creamos por accidente.
+     *
+     * @param evt
+     */
     private void mnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCerrarActionPerformed
         txtaTexto.setEditable(false);
         txtaTexto.setText("");
     }//GEN-LAST:event_mnCerrarActionPerformed
-
+    /**
+     * OPCION MENU NUEVO. Esta opcion del menu nos ayuda para crear un nuevo
+     * documento.
+     *
+     * @param evt
+     */
     private void mnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnNuevoActionPerformed
         txtaTexto.setEditable(true);
         txtaTexto.setText("");
     }//GEN-LAST:event_mnNuevoActionPerformed
 
+    /**
+     * OPCION MENU SALIR. Esta opcion del menu nos ayuda para salir del
+     * programa.
+     *
+     * @param evt
+     */
     private void mnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSalirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_mnSalirActionPerformed
@@ -196,6 +249,11 @@ public class Encriptacion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                    System.out.println("Error setting Java LAF: " + e);
+                }
                 new Encriptacion().setVisible(true);
             }
         });
