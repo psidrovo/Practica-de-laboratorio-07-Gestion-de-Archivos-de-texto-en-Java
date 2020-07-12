@@ -146,7 +146,7 @@ public class Encriptacion extends javax.swing.JFrame {
      * guardar. Este se puede personalizar segun nuestras necesidades, en este
      * caso fc.setDialogTitle("") se le pasa un titulo dependiendo la necesidad
      * del programador, en este caso es BUSCAR DOCUMENTO.
-     * fc.setCurrentDirectory(File) se le pasa ob objeto tipo file que debe
+     * fc.setCurrentDirectory(File) se le pasa objeto tipo file que debe
      * tener la ruta donde deseamos que se abra como predeterminado, en caso de
      * no encontrarla se ira a la ruta predeterminada del sistema de Documentos.
      * fc.setFileFilter(FileNameExtensionFilter) se le pasa el tipo de archivos
