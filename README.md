@@ -223,3 +223,7 @@ Así mismo se crearon ActionPerformed Events para que el usuario pueda decidir q
 	mnCerrarActionPerformed: esta opción nos permite cerrar el documento en caso de que se creo algún documento no deseado. 
 	mnNuevoActionPerformed: esta opción nos permite crear un nuevo documento. 
 	mnSalirActionPerformed: esta opción termina el programa. 
+
+**Imagen de interfaz**
+
+<img width="686" alt="Screen Shot 2020-07-12 at 3 47 08 PM" src="https://user-images.githubusercontent.com/64902384/87256328-14e56c00-c457-11ea-9580-8b6eb24d4131.png">
